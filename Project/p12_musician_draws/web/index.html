@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Air Harp · Hand-Tracking Instrument</title>
+<link rel="stylesheet" href="style.css" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="aurora">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-orb">🎻</div>
+        <div class="brand-text">
+          <h1>AIR HARP</h1>
+          <span class="tag">Hand-Tracking Virtual Instrument</span>
+        </div>
+      </div>
+      <nav class="topnav">
+        <button class="nav-btn active" data-tab="play">Play</button>
+        <button class="nav-btn" data-tab="how">How It Works</button>
+        <button class="nav-btn" data-tab="about">About</button>
+      </nav>
+      <div class="status">
+        <span id="statusDot" class="dot off"></span>
+        <span id="statusText">Idle</span>
+      </div>
+    </header>
+
+    <main class="stage">
+      <section class="video-panel">
+        <div class="video-wrap">
+          <video id="video" playsinline></video>
+          <canvas id="canvas"></canvas>
+          <div class="hud-top">
+            <div class="hud-chip"><span class="k">FPS</span><span id="fps" class="v">0</span></div>
+            <div class="hud-chip"><span class="k">STRINGS</span><span id="nstr" class="v">0</span></div>
+            <div class="hud-chip accent"><span class="k">LAST NOTE</span><span id="note" class="v">—</span></div>
+          </div>
+          <div class="hud-bottom">
+            <span class="hint"><kbd>Pinch ✌</kbd> draw</span>
+            <span class="hint"><kbd>Touch</kbd> pluck</span>
+            <span class="hint"><kbd>C</kbd> clear</span>
+            <span class="hint"><kbd>Q</kbd> quit</span>
+          </div>
+          <div id="startOverlay" class="start-overlay">
+            <div class="start-card">
+              <div class="pulse-ring"></div>
+              <div class="start-icon">🎥</div>
+              <h2>Ready to Play?</h2>
+              <p>Allow camera access, then pinch with both hands to stretch a string.</p>
+              <button id="startBtn" class="primary-btn">Launch Air Harp</button>
+              <span class="micro-hint">Uses webcam · runs fully in your browser</span>
+            </div>
+          </div>
+        </div>
+        <div class="visualizer">
+          <div class="viz-label">LIVE WAVEFORM</div>
+          <canvas id="vizCanvas"></canvas>
+        </div>
+      </section>
+
+      <aside class="deck">
+        <div class="card">
+          <div class="card-head">
+            <span class="card-icon">🎵</span>
+            <h3>Note Palette</h3>
+          </div>
+          <p class="card-sub">C-Major Pentatonic · longest string = lowest note</p>
+          <div class="note-grid" id="noteLegend"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <span class="card-icon">🧵</span>
+            <h3>String Monitor</h3>
+          </div>
+          <div class="monitor-stats">
+            <div class="stat"><span class="stat-v" id="statActive">0</span><span class="stat-l">Active</span></div>
+            <div class="stat"><span class="stat-v" id="statMax">8</span><span class="stat-l">Max</span></div>
+            <div class="stat"><span class="stat-v" id="statPlucks">0</span><span class="stat-l">Plucks</span></div>
+          </div>
+          <div class="string-list" id="stringList">
+            <div class="empty-state">No strings yet — pinch both hands to draw one</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <span class="card-icon">🎛️</span>
+            <h3>Controls</h3>
+          </div>
+          <div class="btn-row">
+            <button id="clearBtn" class="ghost-btn">Clear All</button>
+            <button id="stopBtn" class="ghost-btn danger">Stop Camera</button>
+          </div>
+          <div class="keymap">
+            <div class="key-row"><kbd id="keyC" class="clickable">C</kbd><span>Clear strings</span></div>
+            <div class="key-row"><kbd id="keyQ" class="clickable">Q</kbd> / <kbd id="keyEsc" class="clickable">Esc</kbd><span>Quit</span></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="foot">
+      <span class="foot-brand">AIR HARP</span>
+      <span class="foot-sep">·</span>
+      <span>MediaPipe Hands + Web Audio + Canvas</span>
+      <span class="foot-sep">·</span>
+      <span class="foot-live">Runs 100% in browser</span>
+    </footer>
+  </div>
+
+  <div id="howModal" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✕</button>
+      <h2>How Air Harp Works</h2>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><b>Allow camera</b> — the page uses your webcam to track both hands in real time.</div></div>
+        <div class="step"><div class="step-n">2</div><div><b>Pinch to draw</b> — touch thumb + index on both hands; a glowing line stretches between them.</div></div>
+        <div class="step"><div class="step-n">3</div><div><b>Release to save</b> — strings ≥ 80 px are saved (max 8). Longer strings play lower notes.</div></div>
+        <div class="step"><div class="step-n">4</div><div><b>Pluck to play</b> — swipe an index fingertip across a string. It wobbles and plays a note.</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="aboutModal" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✕</button>
+      <h2>About Air Harp</h2>
+      <p>A browser-based virtual harp that turns your hands into strings. Built with MediaPipe Hands for real-time hand landmark tracking, the Web Audio API for synthesized notes (sine + 2nd harmonic with exponential decay), and HTML Canvas for the glowing, vibrating string visuals.</p>
+      <p>No data leaves your device — the camera feed is processed locally in your browser.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+</html>
