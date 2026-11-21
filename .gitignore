@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models / large binaries
+*.pt
+*.pth
+*.onnx
+*.weights
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

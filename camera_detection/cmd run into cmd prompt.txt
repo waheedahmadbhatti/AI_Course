@@ -1,0 +1,5 @@
+conda env create -f environment.yml
+
+!pip install opencv-python
+!pip install opencv-python face-recognition
+!pip install numpy==1.26.4
